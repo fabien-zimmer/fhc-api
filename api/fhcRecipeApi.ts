@@ -19,6 +19,7 @@ import { PrescriptionRequest } from "../model/PrescriptionRequest"
 import { PutVisionResult } from "../model/PutVisionResult"
 import { RecipeKmehrmessageType } from "../model/RecipeKmehrmessageType"
 import { UpdateFeedbackFlagResult } from "../model/UpdateFeedbackFlagResult"
+import { PrescriptionListV4 } from "../model/PrescriptionListV4";
 
 export class fhcRecipeApi {
   host: string
@@ -364,7 +365,7 @@ export class fhcRecipeApi {
     hcpQuality?: string,
     hcpSsin?: string,
     hcpName?: string
-  ): Promise<Array<Prescription>> {
+  ): Promise<PrescriptionListV4> {
     let _body = null
 
     const _url =
@@ -393,7 +394,7 @@ export class fhcRecipeApi {
     xFHCTokenId && (headers = headers.concat(new XHR.Header("X-FHC-tokenId", xFHCTokenId)))
     xFHCPassPhrase && (headers = headers.concat(new XHR.Header("X-FHC-passPhrase", xFHCPassPhrase)))
     return XHR.sendCommand("GET", _url, headers, _body, this.fetchImpl)
-      .then(doc => (doc.body as Array<JSON>).map(it => new Prescription(it)))
+      .then(doc => (new PrescriptionListV4(doc.body)))
       .catch(err => this.handleError(err))
   }
 
